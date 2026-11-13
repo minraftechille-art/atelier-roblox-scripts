@@ -3,17 +3,43 @@
   "updated_at": "2026-11-13",
   "scripts": [
     {
-      "id": "bienvenue-joueur",
-      "name": "Message de bienvenue",
-      "project": "Projet principal",
+      "id": "lave-mortelle",
+      "name": "Lave mortelle",
+      "project": "Île géante",
+      "category": "Gameplay",
+      "status": "Terminé",
+      "author": "Claude Code",
+      "date": "2026-11-13",
+      "description": "Élimine tout joueur qui touche la lave du cratère du volcan.",
+      "location": "Workspace > Ile > Volcan > Lave > LaveMortelle (Script)",
+      "language": "lua",
+      "code": "-- Lave mortelle : tout joueur qui touche la lave est éliminé\nlocal lave = script.Parent\n\nlave.Touched:Connect(function(hit)\n\tlocal humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n\tif humanoid and humanoid.Health > 0 then\n\t\thumanoid.Health = 0\n\tend\nend)\n"
+    },
+    {
+      "id": "phare-rotatif",
+      "name": "Phare rotatif",
+      "project": "Île géante",
       "category": "Systèmes",
       "status": "Terminé",
       "author": "Claude Code",
       "date": "2026-11-13",
-      "description": "Script de test : affiche un message dans la console quand un joueur rejoint la partie. Sert à vérifier que la bibliothèque se remplit bien depuis GitHub.",
-      "location": "ServerScriptService > Script",
+      "description": "Fait tourner en continu le faisceau lumineux du phare sur l'îlot.",
+      "location": "Workspace > Ile > IlotDuPhare > Phare > Faisceau > PhareRotatif (Script)",
       "language": "lua",
-      "code": "-- Affiche un message quand un joueur rejoint\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n\tprint(\"Bienvenue \" .. player.Name .. \" !\")\nend)\n"
+      "code": "-- Phare rotatif : fait tourner le faisceau lumineux du phare\nlocal faisceau = script.Parent\nlocal VITESSE = 45 -- degrés par seconde\n\ngame:GetService(\"RunService\").Heartbeat:Connect(function(dt)\n\tfaisceau.CFrame = faisceau.CFrame * CFrame.Angles(0, math.rad(VITESSE * dt), 0)\nend)\n"
+    },
+    {
+      "id": "ile-generateur",
+      "name": "Générateur de terrain de l'île",
+      "project": "Île géante",
+      "category": "Outils",
+      "status": "Terminé",
+      "author": "Claude Code",
+      "date": "2026-11-13",
+      "description": "Module qui calcule le relief de l'île (plage, forêt, lac, village aplati, volcan) et le matériau de chaque zone. Utilisé pour générer le terrain.",
+      "location": "ServerStorage > IleGenerateur (ModuleScript)",
+      "language": "lua",
+      "code": "local M = {}\nM.R = 520\nM.FLOOR = -40\nM.VOLCAN = Vector2.new(170, -160)\nM.LAC = Vector2.new(-210, 150)\nM.LAC_NIVEAU = 14\nM.VILLAGE = Vector2.new(-150, -190)\nM.VILLAGE_H = 22\n\nlocal function n(x, z, s, seed) return math.noise(x / s, z / s, seed or 3.7) end\n\nfunction M.villageWeight(x, z)\n\tlocal d = (Vector2.new(x, z) - M.VILLAGE).Magnitude\n\treturn math.clamp(1 - (d - 70) / 45, 0, 1)\nend\n\nfunction M.height(x, z)\n\tlocal d = math.sqrt(x * x + z * z) / M.R\n\td = d + n(x, z, 180, 1.3) * 0.12\n\tlocal h\n\tif d < 1 then\n\t\th = (1 - d) ^ 0.8 * 40 - 4\n\t\th = h + n(x, z, 90, 7.1) * 10 * math.min(1, (1 - d) * 4)\n\telse\n\t\th = -4 - (d - 1) * 120\n\tend\n\t-- volcan\n\tlocal dv = (Vector2.new(x, z) - M.VOLCAN).Magnitude\n\th = h + 170 * math.exp(-(dv / 150) ^ 2) * (1 + n(x, z, 40, 9.9) * 0.08)\n\th = h - 60 * math.exp(-(dv / 30) ^ 2)\n\t-- lac\n\tlocal dl = (Vector2.new(x, z) - M.LAC).Magnitude\n\th = h - 26 * math.exp(-(dl / 70) ^ 2)\n\t-- village aplati\n\tlocal w = M.villageWeight(x, z)\n\th = h * (1 - w) + M.VILLAGE_H * w\n\treturn math.max(h, M.FLOOR + 2), dv, dl, w\nend\n\nfunction M.material(x, z, h, dv, dl, w)\n\tif h < 3 then return Enum.Material.Sand end\n\tif dv < 45 and h > 100 then return Enum.Material.CrackedLava end\n\tif dv < 110 and h > 95 then return Enum.Material.Basalt end\n\tif dv < 200 and h > 60 then return Enum.Material.Rock end\n\tif w > 0.6 then return Enum.Material.Grass end\n\tif x < 40 and z > -60 then return Enum.Material.LeafyGrass end\n\treturn Enum.Material.Grass\nend\n\nreturn M\n"
     }
   ]
 }
