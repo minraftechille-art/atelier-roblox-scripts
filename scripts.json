@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-13",
+  "scripts": [
+    {
+      "id": "bienvenue-joueur",
+      "name": "Message de bienvenue",
+      "project": "Projet principal",
+      "category": "Systèmes",
+      "status": "Terminé",
+      "author": "Claude Code",
+      "date": "2026-11-13",
+      "description": "Script de test : affiche un message dans la console quand un joueur rejoint la partie. Sert à vérifier que la bibliothèque se remplit bien depuis GitHub.",
+      "location": "ServerScriptService > Script",
+      "language": "lua",
+      "code": "-- Affiche un message quand un joueur rejoint\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n\tprint(\"Bienvenue \" .. player.Name .. \" !\")\nend)\n"
+    }
+  ]
+}
