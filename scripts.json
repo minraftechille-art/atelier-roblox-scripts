@@ -40,6 +40,19 @@
       "location": "ServerStorage > IleGenerateur (ModuleScript)",
       "language": "lua",
       "code": "local M = {}\nM.R = 1750\nM.FLOOR = -60\nM.VIDE = -25                      -- en dessous : pas de terrain (pas de plage, bord en falaise)\nM.VILLE = Vector2.new(0, 0)       -- centre de la cité fortifiée\nM.VILLE_R = 700                   -- rayon du mur\nM.VILLE_H = 40                    -- hauteur du sol de la cité\nM.VOLCAN = Vector2.new(1150, -950)\nM.FORET = Vector2.new(-1180, -760)\nM.FORET_R = 420\nM.CHAMPS = { x0 = -650, x1 = 650, z0 = 830, z1 = 1450 }\n\nlocal function n(x, z, s, seed) return math.noise(x / s, z / s, seed or 3.7) end\n\nfunction M.villeWeight(x, z)\n\tlocal d = (Vector2.new(x, z) - M.VILLE).Magnitude\n\treturn math.clamp(1 - (d - (M.VILLE_R + 60)) / 140, 0, 1)\nend\n\nfunction M.height(x, z)\n\tlocal d = math.sqrt(x * x + z * z) / M.R\n\td = d + n(x, z, 520, 1.3) * 0.07\n\tlocal h\n\tif d < 0.97 then\n\t\th = 40 + n(x, z, 260, 7.1) * 22 * math.min(1, (0.97 - d) * 6)\n\telse\n\t\th = 40 - (d - 0.97) * 3000       -- falaise abrupte\n\tend\n\tlocal dv = (Vector2.new(x, z) - M.VOLCAN).Magnitude\n\th = h + 260 * math.exp(-(dv / 260) ^ 2) * (1 + n(x, z, 80, 9.9) * 0.08)\n\th = h - 90 * math.exp(-(dv / 50) ^ 2)\n\tlocal w = M.villeWeight(x, z)\n\th = h * (1 - w) + M.VILLE_H * w\n\treturn h, dv, w, d\nend\n\nfunction M.material(x, z, h, dv, w, d)\n\tif d > 0.955 then return Enum.Material.Rock end            -- bord de falaise\n\tif dv < 75 and h > 180 then return Enum.Material.CrackedLava end\n\tif dv < 190 and h > 170 then return Enum.Material.Basalt end\n\tif dv < 340 and h > 110 then return Enum.Material.Rock end\n\tif w > 0.5 then return Enum.Material.Grass end\n\tif (Vector2.new(x, z) - M.FORET).Magnitude < M.FORET_R then return Enum.Material.LeafyGrass end\n\treturn Enum.Material.Grass\nend\n\nreturn M\n"
+    },
+    {
+      "id": "fusion-maison",
+      "name": "Fusion anti-lag (maisons et arbres)",
+      "project": "Île géante",
+      "category": "Outils",
+      "status": "Terminé",
+      "author": "Claude Code",
+      "date": "2026-11-13",
+      "description": "Réduit le lag : fusionne les pièces d'un modèle (maison, arbre) par groupe de matériau + couleur avec UnionAsync. L'apparence est conservée. A fait passer l'île de 25 451 à 8 768 pièces.",
+      "location": "ServerStorage > FusionMaison (ModuleScript)",
+      "language": "lua",
+      "code": "-- Fusionne les pièces d'une maison par groupe (matériau + couleur) pour réduire le lag\nreturn function(house)\n\tlocal groups = {}\n\tfor _, p in ipairs(house:GetChildren()) do\n\t\tif p.ClassName == \"Part\" then\n\t\t\tlocal key = p.Material.Name .. \"|\" .. p.Color:ToHex() .. \"|\" .. p.Transparency .. \"|\" .. p.Reflectance\n\t\t\tgroups[key] = groups[key] or {}\n\t\t\ttable.insert(groups[key], p)\n\t\tend\n\tend\n\tlocal before, after = 0, 0\n\tfor _, list in pairs(groups) do\n\t\tbefore += #list\n\t\tif #list > 1 then\n\t\t\tlocal first = table.remove(list, 1)\n\t\t\tlocal ok, u = pcall(function() return first:UnionAsync(list) end)\n\t\t\tif ok and u then\n\t\t\t\tu.UsePartColor = true\n\t\t\t\tu.Color = first.Color\n\t\t\t\tu.Material = first.Material\n\t\t\t\tu.Reflectance = first.Reflectance\n\t\t\t\tu.Transparency = first.Transparency\n\t\t\t\tu.CollisionFidelity = Enum.CollisionFidelity.Box\n\t\t\t\tu.Anchored = true\n\t\t\t\tu.CastShadow = first.Material ~= Enum.Material.Wood and first.Material ~= Enum.Material.Glass\n\t\t\t\tu.Name = first.Material.Name\n\t\t\t\tu.Parent = house\n\t\t\t\tfirst:Destroy()\n\t\t\t\tfor _, p in ipairs(list) do p:Destroy() end\n\t\t\t\tafter += 1\n\t\t\telse\n\t\t\t\tafter += #list + 1\n\t\t\tend\n\t\telse\n\t\t\tafter += 1\n\t\tend\n\tend\n\treturn before, after\nend\n"
     }
   ]
 }
