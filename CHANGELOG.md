@@ -3,6 +3,8 @@
 Toutes les étapes importantes du jeu, de la plus récente à la plus ancienne.
 
 ## 2026-11-17
+- Réorganisation du dépôt : page d'accueil « Par où commencer ? », sommaire [docs/](docs/README.md), carte du monde [docs/MONDE.md](docs/MONDE.md), index des [scripts](scripts/README.md), dossiers `interface/` et `systemes/` prêts.
+- Nouveaux formulaires d'issues : **bug** et **idée**. Étiquettes par membre : `claude`, `lucas`, `joris`.
 - Organisation de l'équipe (Claude, Lucas, Joris) : [docs/EQUIPE.md](docs/EQUIPE.md) + feuille de route interactive modifiable par toute l'équipe.
 
 ## 2026-11-16

@@ -8,7 +8,8 @@ $json = [IO.File]::ReadAllText((Join-Path $root "scripts.json"), $utf8) | Conver
 
 $folders = @{ "Gameplay" = "gameplay"; "Interface" = "interface"; "Systèmes" = "systemes"; "Outils" = "outils" }
 $scriptsDir = Join-Path $root "scripts"
-if (Test-Path $scriptsDir) { Remove-Item -Recurse -Force $scriptsDir }
+# on ne supprime que les .lua générés : les README et .gitkeep des dossiers restent
+if (Test-Path $scriptsDir) { Get-ChildItem $scriptsDir -Recurse -Filter *.lua | Remove-Item -Force }
 
 foreach ($s in $json.scripts) {
     $sub = $folders[$s.category]
