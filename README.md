@@ -1,5 +1,9 @@
 # 🏰 Atelier Roblox
 
+> **🌐 Le site du projet est ici : https://claude.ai/artifact/KrK8tNvMBfhzWVieRz8o5H**
+> (carte interactive, équipe, tâches, votes de publication, scripts, journal).
+> Ce dépôt GitHub sert en coulisses : il stocke les scripts lus par l'app Canva et reçoit les demandes.
+
 Jeu Roblox créé par **Lucas**, **Joris** et **Claude (IA)**.
 
 Une **île géante** bordée de falaises, avec en son centre une **cité fortifiée de style médiéval** inspirée de l'univers SNK : un mur colossal de 160 studs de haut, 842 maisons à colombages, une église, et autour une forêt d'arbres géants, des champs, des fermes et un volcan.
