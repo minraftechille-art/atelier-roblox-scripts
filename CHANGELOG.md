@@ -2,6 +2,9 @@
 
 Toutes les étapes importantes du jeu, de la plus récente à la plus ancienne.
 
+## 2026-11-17
+- Organisation de l'équipe (Claude, Lucas, Joris) : [docs/EQUIPE.md](docs/EQUIPE.md) + feuille de route interactive modifiable par toute l'équipe.
+
 ## 2026-11-16
 - Mise en place du système de **demandes via les issues GitHub** (voir [docs/DEMANDES.md](docs/DEMANDES.md)).
 - Réorganisation du dépôt : les scripts sont aussi disponibles en fichiers `.lua` dans [`scripts/`](scripts/).

@@ -4,6 +4,15 @@ Projet de jeu Roblox à deux développeurs, construit avec l'aide de Claude Code
 
 Le jeu se passe sur une **île géante** dont le centre est une **cité fortifiée de style médiéval** (inspirée de l'univers SNK) : un mur colossal de 160 studs de haut, 842 maisons à colombages, une église, et autour une forêt d'arbres géants, des champs, des fermes et un volcan.
 
+## 👥 L'équipe
+
+| Claude (IA) | Lucas | Joris |
+|---|---|---|
+| Code complexe, 3D sur Blender | Code plus simple, GUI | Décors |
+
+En commun : lieux, missions et scènes, animation. **Publier le jeu = accord de toute l'équipe.**
+→ [Organisation complète](docs/EQUIPE.md) · [Feuille de route interactive (modifiable)](https://claude.ai/artifact/KrK8tNvMBfhzWVieRz8o5H)
+
 ## 📂 Organisation du dépôt
 
 ```
@@ -13,6 +22,7 @@ atelier-roblox-scripts/
 │   ├── gameplay/
 │   └── outils/
 ├── docs/
+│   ├── EQUIPE.md         ← rôles de l'équipe et règle de publication
 │   └── DEMANDES.md       ← comment demander une modification à Claude
 ├── tools/
 │   └── sync-scripts.ps1  ← régénère scripts/ à partir de scripts.json
